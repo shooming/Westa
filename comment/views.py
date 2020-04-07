@@ -12,6 +12,9 @@ class UserComment(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
+
+            if data['comment'] == '':
+                return JsonResponse({'messange':'No Comment'}, status = 401)
             
             if User.objects.filter(user_id = data['id']).exists():
                 Comment(

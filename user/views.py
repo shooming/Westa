@@ -5,16 +5,24 @@ from django.views       import View
 
 from .models            import User
 
+
 class UserView(View):
     def post(self, request):
         data = json.loads(request.body)
-        User(
+        try:
+            if User.objects.filter(user_id = data['id']).exists():
+                return JsonResponse({'message':'User already registered'}, status=401)
+
+            if data['id'] == '' or data['password'] == '' or data['eamil'] == '':
+                return HttpResponse(status = 400)
+
+            User(
                 user_id     = data['id'],
                 password    = data['password'],
                 email       = data['email']
-        ).save()
-
-        return HttpResponse(status = 200)
+            )
+        except KeyError:
+            return HttpResponse(status = 200)
 
 class UserLogin(View):
     def post(self, request):
