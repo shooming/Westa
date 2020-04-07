@@ -7,19 +7,14 @@ from .models            import User
 
 class UserView(View):
     def post(self, request):
-        try:
-            data = json.loads(request.body)
-            if User.objects.filter(user_id = data['id']).exists():
-                return HttpResponse(status = 401)
-            User(
-                    user_id     = data['id'],
-                    password    = data['password'],
-                    email       = data['email']
-                ).save()
-            return HttpResponse(status = 200)
+        data = json.loads(request.body)
+        User(
+                user_id     = data['id'],
+                password    = data['password'],
+                email       = data['email']
+        ).save()
 
-        except KeyError:
-            return HttpResponse(status = 200)
+        return HttpResponse(status = 200)
 
 class UserLogin(View):
     def post(self, request):
